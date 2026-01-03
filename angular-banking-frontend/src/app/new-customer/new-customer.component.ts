@@ -11,6 +11,9 @@ import {Router} from "@angular/router";
 })
 export class NewCustomerComponent implements OnInit {
   newCustomerFormGroup! : FormGroup;
+  isSubmitting = false;
+  savedMessage: string | null = null;
+
   constructor(private fb : FormBuilder, private customerService:CustomerService, private router:Router) { }
 
   ngOnInit(): void {
@@ -20,17 +23,33 @@ export class NewCustomerComponent implements OnInit {
     });
   }
 
+  get name() { return this.newCustomerFormGroup.get('name')!; }
+  get email() { return this.newCustomerFormGroup.get('email')!; }
+
   handleSaveCustomer() {
-    let customer:Customer=this.newCustomerFormGroup.value;
+    if (this.newCustomerFormGroup.invalid) {
+      this.newCustomerFormGroup.markAllAsTouched();
+      this.focusFirstInvalid();
+      return;
+    }
+    this.isSubmitting = true;
+    const customer:Customer=this.newCustomerFormGroup.value;
     this.customerService.saveCustomer(customer).subscribe({
       next : data=>{
-        alert("Customer has been successfully saved!");
-        //this.newCustomerFormGroup.reset();
-        this.router.navigateByUrl("/customers");
+        this.isSubmitting = false;
+        this.savedMessage = 'Customer has been successfully saved!';
+        setTimeout(()=> this.router.navigateByUrl('/customers'), 800);
       },
       error : err => {
-        console.log(err);
+        this.isSubmitting = false;
+        this.savedMessage = 'An error occurred while saving. Please try again.';
+        console.error(err);
       }
     });
+  }
+
+  private focusFirstInvalid() {
+    const firstInvalid = document.querySelector('.form-control.ng-invalid') as HTMLElement | null;
+    if (firstInvalid) { firstInvalid.focus(); }
   }
 }

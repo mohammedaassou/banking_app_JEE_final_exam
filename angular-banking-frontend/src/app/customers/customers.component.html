@@ -1,16 +1,17 @@
 <div class="container mt-2">
   <ng-container *ngIf="customers | async as listCustomers; else failureOrLading">
     <div class="card">
-      <div class="card-header">Customers</div>
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <div>Customers</div>
+        <a class="btn btn-sm btn-brand" routerLink="/new-customer" aria-label="Add customer"><i class="bi bi-person-plus" aria-hidden="true"></i> Add customer</a>
+      </div>
       <div class="card-body">
         <div *ngIf="searchFormGroup">
           <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
-            <div class="input-group">
+            <div class="input-group search-group">
               <label class="input-group-text">Keyword :</label>
               <input type="text" formControlName="keyword" class="form-control">
-              <button class="btn btn-info">
-                <i class="bi bi-search"></i>
-              </button>
+              <button class="btn btn-search" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
             </div>
           </form>
         </div>
@@ -26,13 +27,13 @@
             <td>{{c.name}}</td>
             <td>{{c.email}}</td>
             <td>
-              <button (click)="handleDeleteCustomer(c)" class="btn btn-danger">
+              <button (click)="handleDeleteCustomer(c)" class="btn btn-outline-danger btn-sm" aria-label="Delete customer" title="Delete customer">
                 <i class="bi bi-trash"></i>
               </button>
             </td>
             <td>
-              <button (click)="handleCustomerAccounts(c)" class="btn btn-success">
-                Accounts
+              <button (click)="handleCustomerAccounts(c)" class="btn btn-sm btn-icon" aria-label="View accounts" title="View accounts">
+                <i class="bi bi-eye"></i>
               </button>
             </td>
           </tr>

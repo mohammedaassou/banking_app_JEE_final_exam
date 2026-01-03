@@ -1,0 +1,8 @@
+/* Customer accounts styles */
+.card { border-radius: .6rem; }
+.badge { padding: .35em .6em; border-radius: .35rem; }
+.btn-icon { width:36px; height:36px; }
+
+/* Back button spacing */
+.container > .mb-2 { display:flex; justify-content:flex-start; }
+.btn-sm.btn-icon i { font-size: 1rem; }

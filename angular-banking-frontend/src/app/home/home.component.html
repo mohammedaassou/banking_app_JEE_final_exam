@@ -1,0 +1,139 @@
+<div class="container mt-4">
+  <!-- Show graphs & stats toggle -->
+  <div class="mb-3">
+    <button class="btn btn-graph" (click)="toggleGraphs()" aria-label="Toggle graphs and statistics">
+      <i class="bi" [ngClass]="showGraphs ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+      {{ showGraphs ? 'Hide' : 'Show' }} Graphs & Stats
+    </button>
+  </div>
+
+  <!-- Charts panel (collapsible) -->
+  <div *ngIf="showGraphs" class="charts-panel mb-4">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header"><strong>Customer Growth</strong></div>
+          <div class="card-body chart-container">
+            <canvas #customerGrowthCanvas></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header"><strong>Top Accounts by Balance</strong></div>
+          <div class="card-body chart-container">
+            <canvas #topAccountsCanvas></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header"><strong>Account Type Distribution</strong></div>
+          <div class="card-body chart-container">
+            <canvas #accountTypeCanvas></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header"><strong>Operation Type Distribution</strong></div>
+          <div class="card-body chart-container">
+            <canvas #operationTypeCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+
+    <!-- Dashboard summary cards -->
+    <div class="col-12">
+      <div class="d-flex gap-3 stats-row flex-wrap">
+        <div class="stat-card p-3">
+          <div class="stat-label">Customers</div>
+          <div class="stat-value">{{ totalCustomers }}</div>
+        </div>
+        <div class="stat-card p-3">
+          <div class="stat-label">Accounts</div>
+          <div class="stat-value">{{ totalAccounts }}</div>
+        </div>
+        <div class="stat-card p-3">
+          <div class="stat-label">Total Balance</div>
+          <div class="stat-value">{{ totalBalance | number:'1.2-2' }}</div>
+        </div>
+        <div class="stat-card p-3">
+          <div class="stat-label">Recent ops</div>
+          <div class="stat-value">{{ recentOpsCount }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Customers</strong>
+          <div>
+            <button class="btn btn-sm btn-icon me-2" (click)="goToAllCustomers()" title="View all customers" aria-label="View all customers"><i class="bi bi-list" aria-hidden="true"></i></button>
+            <button class="btn btn-sm btn-brand" (click)="openNewCustomer()" title="Add customer" aria-label="Add customer"><i class="bi bi-person-plus" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <div class="card-body p-2">
+          <div *ngIf="loadingCustomers" class="text-center py-3">Loading…</div>
+          <table *ngIf="!loadingCustomers && customers.length" class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th class="text-muted">Email</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of customers">
+                <td>{{ c.name }}</td>
+                <td class="text-muted">{{ c.email }}</td>
+                <td class="text-end"><button class="btn btn-sm btn-icon" (click)="openCustomerDetails(c)" title="View customer" aria-label="View customer"><i class="bi bi-eye" aria-hidden="true"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="!loadingCustomers && !customers.length" class="text-muted p-3">No customers yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Accounts</strong>
+          <div>
+            <button class="btn btn-sm btn-icon me-2" (click)="goToAllAccounts()" title="View all accounts" aria-label="View all accounts"><i class="bi bi-list" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <div class="card-body p-2">
+          <div *ngIf="loadingAccounts" class="text-center py-3">Loading…</div>
+          <table *ngIf="!loadingAccounts && accounts.length" class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>Account ID</th>
+                <th class="text-muted">Type</th>
+                <th class="text-end">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let a of accounts">
+                <td>{{ a.id || a.accountId }}</td>
+                <td>
+                  <span class="badge" [ngClass]="{'badge-savings': (a.type | accountType) === 'SAVING', 'badge-current': (a.type | accountType) === 'CURRENT'}">{{ a.type | accountType:'label' }}</span>
+                </td>
+                <td class="text-end">{{ a.balance | number:'1.2-2' }}</td>
+                <td class="text-end ps-3"><button class="btn btn-sm btn-icon" (click)="openAccount(a)" title="Open account" aria-label="Open account"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="!loadingAccounts && !accounts.length" class="text-muted p-3">No accounts yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+

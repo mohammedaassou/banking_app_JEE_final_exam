@@ -1,0 +1,12 @@
+/* Navbar custom styles */
+.navbar-brand .brand-text { font-weight:700; color: #fff; }
+.navbar { padding: 0.5rem 1rem; }
+.navbar .nav-link { color: rgba(255,255,255,0.95); font-weight:500; }
+.navbar .nav-link.active { color: #fff; font-weight:700; }
+.navbar .dropdown-menu { min-width: 12rem; }
+.navbar .form-control { width: 220px; max-width: 40vw; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.12); color: #fff; }
+.navbar .form-control::placeholder { color: rgba(255,255,255,0.85); }
+.navbar .form-control:focus { background: rgba(255,255,255,0.2); box-shadow: none; }
+.navbar .btn-brand { color: #fff; background-color: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+.navbar-toggler { border-color: rgba(255,255,255,0.15); }
+.navbar-toggler-icon { filter: invert(1) brightness(2); }

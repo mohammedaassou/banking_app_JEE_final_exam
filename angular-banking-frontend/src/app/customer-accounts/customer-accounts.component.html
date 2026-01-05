@@ -1,4 +1,44 @@
-<div class="container">
-  <div>{{customerId}}</div>
-  <div>{{customer | json}}</div>
+<div class="container mt-4">
+  <div class="mb-2">
+    <button class="btn btn-sm btn-icon" (click)="backToList()" aria-label="Back to customers" title="Back to customers"><i class="bi bi-arrow-left"></i> <span class="visually-hidden">Back to customers</span></button>
+  </div>
+
+  <div class="card">
+    <div class="card-body d-flex align-items-center justify-content-between">
+      <div>
+        <h5 class="mb-1">{{ customer?.name || 'Customer' }}</h5>
+        <div class="text-muted">{{ customer?.email }}</div>
+        <div class="mt-2"><small class="text-muted">Customer ID: {{ customerId }}</small></div>
+      </div>
+      <div class="text-end">
+        <button class="btn btn-sm btn-brand" (click)="openAccount(accounts[0])" *ngIf="accounts.length>0" aria-label="Open first account" title="Open first account"><i class="bi bi-box-arrow-up-right"></i> <span class="ms-2">Open account</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-header"><strong>Accounts</strong></div>
+    <div class="card-body p-2">
+      <div *ngIf="loading" class="text-center py-3">Loading…</div>
+      <table *ngIf="!loading && accounts.length" class="table table-sm mb-0">
+        <thead>
+          <tr>
+            <th>Account ID</th>
+            <th>Type</th>
+            <th class="text-end">Balance</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of accounts">
+            <td>{{ a.id || a.accountId }}</td>
+            <td><span class="badge" [ngClass]="{'badge-savings': (a.type | accountType) === 'SAVING', 'badge-current': (a.type | accountType) === 'CURRENT'}">{{ a.type | accountType:'label' }}</span></td>
+            <td class="text-end">{{ a.balance | number:'1.2-2' }}</td>
+            <td class="text-end ps-3"><button class="btn btn-sm btn-icon" (click)="openAccount(a)"><i class="bi bi-box-arrow-up-right"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!loading && !accounts.length" class="text-muted p-3">No accounts found for this customer.</div>
+    </div>
+  </div>
 </div>

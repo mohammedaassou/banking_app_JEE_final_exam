@@ -14,3 +14,13 @@ export interface AccountOperation {
   type:          string;
   description:   string;
 }
+
+export interface BankAccountDTO {
+  id?: string;
+  accountId?: string;
+  type?: string;
+  balance?: number;
+  createdAt?: string | Date;
+  status?: string;
+  customerDTO?: { id?: number; name?: string; email?: string };
+}

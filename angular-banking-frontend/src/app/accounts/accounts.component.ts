@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {AccountsService} from "../services/accounts.service";
-import {catchError, Observable, throwError} from "rxjs";
-import {AccountDetails} from "../model/account.model";
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-accounts',
@@ -11,81 +10,50 @@ import {AccountDetails} from "../model/account.model";
 })
 export class AccountsComponent implements OnInit {
   accountFormGroup! : FormGroup;
-  currentPage : number =0;
-  pageSize : number =5;
-  accountObservable! : Observable<AccountDetails>
-  operationFromGroup! : FormGroup;
-  errorMessage! :string ;
+  accounts: Array<any> = [];
+  loadingAccounts = false;
+  errorMessage!: string;
 
-  constructor(private fb : FormBuilder, private accountService : AccountsService) { }
+  constructor(private fb : FormBuilder, private accountService : AccountsService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.accountFormGroup=this.fb.group({
       accountId : this.fb.control('')
     });
-    this.operationFromGroup=this.fb.group({
-      operationType : this.fb.control(null),
-      amount : this.fb.control(0),
-      description : this.fb.control(null),
-      accountDestination : this.fb.control(null)
-    })}
+
+    // Auto-search via query params — navigate to detail page if provided
+    this.route.queryParams.subscribe(params => {
+      const accountId = params['accountId'];
+      if (accountId) {
+        this.router.navigate(['/accounts', accountId]);
+      }
+    });
+
+    // Load accounts list for quick access
+    this.loadAccounts();
+  }
+
+  loadAccounts() {
+    this.loadingAccounts = true;
+    this.accountService.getAccounts().subscribe({
+      next: data => {
+        this.accounts = (data || []).slice(0, 10);
+        console.log('Accounts page: loaded accounts types:', this.accounts.map(a => ({ id: a.id||a.accountId, type: a.type })));
+        this.loadingAccounts = false;
+      },
+      error: err => { this.loadingAccounts = false; console.error(err); }
+    });
+  }
+
+  openAccount(a: any) {
+    const id = a.id || a.accountId || '';
+    this.router.navigate(['/accounts', id]);
+  }
 
   handleSearchAccount() {
-    let accountId : string =this.accountFormGroup.value.accountId;
-    this.accountObservable=this.accountService.getAccount(accountId,this.currentPage, this.pageSize).pipe(
-      catchError(err => {
-        this.errorMessage=err.message;
-        return throwError(err);
-      })
-    );
-  }
-
-  gotoPage(page: number) {
-    this.currentPage=page;
-    this.handleSearchAccount();
-  }
-
-  handleAccountOperation() {
-    let accountId :string = this.accountFormGroup.value.accountId;
-    let operationType=this.operationFromGroup.value.operationType;
-    let amount :number =this.operationFromGroup.value.amount;
-    let description :string =this.operationFromGroup.value.description;
-    let accountDestination :string =this.operationFromGroup.value.accountDestination;
-    if(operationType=='DEBIT'){
-      this.accountService.debit(accountId, amount,description).subscribe({
-        next : (data)=>{
-          alert("Success Credit");
-          this.operationFromGroup.reset();
-          this.handleSearchAccount();
-        },
-        error : (err)=>{
-          console.log(err);
-        }
-      });
-    } else if(operationType=='CREDIT'){
-      this.accountService.credit(accountId, amount,description).subscribe({
-        next : (data)=>{
-          alert("Success Debit");
-          this.operationFromGroup.reset();
-          this.handleSearchAccount();
-        },
-        error : (err)=>{
-          console.log(err);
-        }
-      });
-    }
-    else if(operationType=='TRANSFER'){
-      this.accountService.transfer(accountId,accountDestination, amount,description).subscribe({
-        next : (data)=>{
-          alert("Success Transfer");
-          this.operationFromGroup.reset();
-          this.handleSearchAccount();
-        },
-        error : (err)=>{
-          console.log(err);
-        }
-      });
-
+    const accountId: string = this.accountFormGroup.value.accountId;
+    if (accountId && accountId.trim()) {
+      this.router.navigate(['/accounts', accountId.trim()]);
     }
   }
 }

@@ -1,29 +1,36 @@
 <div class="container">
-  <div class="card col-md-6 offset-3 mt-2">
-    <div class="card-header">New Customer</div>
+  <div class="card mt-4 mx-auto" style="max-width:640px;">
+    <div class="card-header"><strong>New Customer</strong></div>
     <div class="card-body">
-      <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleSaveCustomer()">
+      <div *ngIf="savedMessage" class="alert alert-success" role="status" aria-live="polite">
+        {{ savedMessage }}
+      </div>
+
+      <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleSaveCustomer()" novalidate>
         <div class="mb-3">
-          <label class="form-label">Name:</label>
-          <input type="text" formControlName="name" class="form-control">
-          <span class="text-danger"
-                *ngIf="newCustomerFormGroup.controls['name'].touched
-                && newCustomerFormGroup.controls['name'].errors
-                && newCustomerFormGroup.controls['name'].errors!['required']">
-            Name is Required
-          </span>
+          <label for="name" class="form-label">Name <span class="text-muted" aria-hidden="true">(min 4 chars)</span></label>
+          <input id="name" type="text" formControlName="name" class="form-control" placeholder="Full name" [class.is-invalid]="name.invalid && (name.dirty || name.touched)" aria-required="true" [attr.aria-invalid]="name.invalid && (name.dirty || name.touched)" aria-describedby="nameError">
+          <div id="nameError" class="invalid-feedback" *ngIf="name.errors && (name.dirty || name.touched)" role="alert">
+            <div *ngIf="name.errors['required']">Name is required.</div>
+            <div *ngIf="name.errors['minlength']">Name must be at least {{ name.errors['minlength'].requiredLength }} characters.</div>
+          </div>
         </div>
+
         <div class="mb-3">
-          <label class="form-label">Email:</label>
-          <input type="text" formControlName="email" class="form-control">
-          <span class="text-danger"
-                *ngIf="newCustomerFormGroup.controls['email'].touched
-                && newCustomerFormGroup.controls['email'].errors
-                && newCustomerFormGroup.controls['email'].errors!['email']">
-            Email is not valid
-          </span>
+          <label for="email" class="form-label">Email</label>
+          <input id="email" type="email" formControlName="email" class="form-control" placeholder="name@example.com" [class.is-invalid]="email.invalid && (email.dirty || email.touched)" aria-required="true" [attr.aria-invalid]="email.invalid && (email.dirty || email.touched)" aria-describedby="emailError">
+          <div id="emailError" class="invalid-feedback" *ngIf="email.errors && (email.dirty || email.touched)" role="alert">
+            <div *ngIf="email.errors['required']">Email is required.</div>
+            <div *ngIf="email.errors['email']">Please enter a valid email address.</div>
+          </div>
         </div>
-        <button [disabled]="!newCustomerFormGroup.valid" class="btn btn-info">Save</button>
+
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-brand" [disabled]="isSubmitting">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Save
+          </button>
+        </div>
       </form>
     </div>
   </div>

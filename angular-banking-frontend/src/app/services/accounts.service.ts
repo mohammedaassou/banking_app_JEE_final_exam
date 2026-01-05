@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {AccountDetails} from "../model/account.model";
+import {AccountDetails, BankAccountDTO} from "../model/account.model";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,14 @@ export class AccountsService {
 
   public getAccount(accountId : string, page : number, size : number):Observable<AccountDetails>{
     return this.http.get<AccountDetails>(environment.backendHost+"/accounts/"+accountId+"/pageOperations?page="+page+"&size="+size);
+  }
+
+  public getAccounts(): Observable<Array<BankAccountDTO>> {
+    return this.http.get<Array<BankAccountDTO>>(environment.backendHost+"/accounts");
+  }
+
+  public getBankAccount(accountId: string): Observable<BankAccountDTO> {
+    return this.http.get<BankAccountDTO>(environment.backendHost + "/accounts/" + accountId);
   }
   public debit(accountId : string, amount : number, description:string){
     let data={accountId : accountId, amount : amount, description : description}

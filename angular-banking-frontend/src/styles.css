@@ -1,2 +1,190 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap-icons/font/bootstrap-icons.css";
+
+/* Theme variables */
+:root {
+  --banking-brand: #0b5ed7;
+  --banking-brand-600: #094ea8;
+  --banking-accent: #20c997;
+  --muted: #6c757d;
+  --surface: #f8f9fa;
+  --card-bg: #ffffff;
+  --focus-ring: rgba(11,94,213,0.15);
+  --brand-gradient: linear-gradient(90deg, rgba(11,94,213,1) 0%, rgba(32,201,151,0.9) 100%);
+}
+
+/* Base */
+body {
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: linear-gradient(180deg, #f8fbff 0%, var(--surface) 60%);
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus visible */
+:focus {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Navbar */
+.navbar {
+  padding: 0.5rem 1rem;
+  background: var(--banking-brand);
+  color: #fff;
+}
+.navbar .navbar-brand .brand-text { color: #fff; }
+.navbar .nav-link { color: rgba(255,255,255,0.95); font-weight:500; }
+.navbar .nav-link.active { color: #fff; font-weight:700; }
+.navbar .dropdown-menu { min-width: 12rem; }
+.navbar .form-control { width: 220px; max-width: 40vw; }
+.navbar .btn-brand { color: #fff; background-color: transparent; border: 1px solid rgba(255,255,255,0.12); }
+
+/* Cards and surfaces */
+.card {
+  border-radius: 0.6rem;
+  background: var(--card-bg);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+.card-header {
+  background: rgba(11,94,213,0.06);
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  color: var(--banking-brand);
+  font-weight: 700;
+}
+
+/* Buttons */
+.btn-brand {
+  background-color: var(--banking-brand);
+  border-color: var(--banking-brand);
+  color: #fff;
+}
+.btn-brand:hover, .btn-brand:focus {
+  background-color: var(--banking-brand-600);
+  border-color: var(--banking-brand-600);
+  transform: translateY(-1px);
+}
+
+/* Graph toggle button (subtle hover, no translate) */
+.btn-graph {
+  background-color: var(--banking-brand);
+  border-color: var(--banking-brand);
+  color: #fff;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+.btn-graph:hover, .btn-graph:focus {
+  background-color: rgba(11,94,213,0.92);
+  border-color: rgba(11,94,213,0.92);
+  transform: none;
+  box-shadow: 0 6px 18px rgba(11,94,213,0.12);
+}
+
+/* Search buttons (customers & accounts) - bordered control that changes color on hover */
+.btn-search {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--muted);
+  padding: .4rem .6rem;
+  border-radius: .0 .35rem .35rem 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 38px;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+.btn-search:hover, .btn-search:focus {
+  background: var(--banking-brand);
+  border-color: var(--banking-brand);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(11,94,213,0.12);
+  transform: none;
+}
+
+/* Make sure icon-only style is preserved */
+.btn-search i { font-size: 1.05rem; }
+
+/* Wrapper that makes the input group look like a single bordered control */
+.search-group {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: .35rem;
+  overflow: hidden;
+  align-items: stretch;
+}
+.search-group .input-group-text {
+  border: 0;
+  background: #f1f4f8;
+  color: var(--muted);
+  font-weight: 600;
+}
+.search-group .form-control {
+  border: 0;
+  box-shadow: none;
+  padding-left: .6rem;
+}
+.search-group .btn-search {
+  border-left: 1px solid rgba(0,0,0,0.08);
+  border-radius: 0 .35rem .35rem 0;
+  height: 38px;
+}
+.search-group .btn-search:hover, .search-group .btn-search:focus {
+  background: var(--banking-brand);
+  border-left-color: var(--banking-brand);
+  color: #fff;
+}
+
+
+/* Icon-only button */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--banking-brand);
+}
+.btn-icon:hover { background: rgba(11,94,213,0.06); color: var(--banking-brand-600); }
+
+/* Badges for account types: current (blue) and saving (green) */
+.badge-savings {
+  background: var(--banking-accent); /* green */
+  color: #ffffff; /* white text */
+  font-weight:700;
+  border-radius: 0.35rem;
+  padding: .35em .6em;
+  display: inline-block;
+}
+.badge-current {
+  background: var(--banking-brand); /* blue */
+  color: #ffffff; /* white text */
+  font-weight:700;
+  border-radius: 0.35rem;
+  padding: .35em .6em;
+  display: inline-block;
+}
+
+/* Make badges uppercase and bold for visual consistency */
+.badge {
+  text-transform: uppercase;
+  font-weight:700;
+  letter-spacing: .02em;
+}
+
+/* Utilities */
+.visually-hidden { position: absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); border:0; }
+
+/* Make sure form controls with .is-invalid show feedback */
+.form-control.is-invalid {
+  border-color: #dc3545;
+  box-shadow: none;
+}
+
+/* Minor responsive helpers */
+@media (max-width: 576px) {
+  .navbar .form-control { width: 140px; }
+}
+

@@ -13,6 +13,8 @@ import { CustomerAccountsComponent } from './customer-accounts/customer-accounts
 import { AccountDetailComponent } from './account-detail/account-detail.component';
 import { HomeComponent } from './home/home.component';
 import { AccountTypePipe } from './shared/account-type.pipe';
+import { FormsModule } from '@angular/forms';
+import { ChatbotComponent } from './chatbot/chatbot.component';
 
 @NgModule({
   declarations: [
@@ -24,13 +26,15 @@ import { AccountTypePipe } from './shared/account-type.pipe';
     CustomerAccountsComponent,
     AccountDetailComponent,
     HomeComponent,
-    AccountTypePipe
+    AccountTypePipe,
+    ChatbotComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

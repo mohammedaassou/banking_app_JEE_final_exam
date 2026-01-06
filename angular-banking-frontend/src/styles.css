@@ -188,3 +188,28 @@ body {
   .navbar .form-control { width: 140px; }
 }
 
+
+/* Floating Chat Launcher */
+.chat-launcher{
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: var(--banking-brand);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(11,94,213,0.25);
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+.chat-launcher:hover, .chat-launcher:focus{
+  background: var(--banking-brand-600);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(11,94,213,0.28);
+}
+.chat-launcher .label{font-weight:700}
+.chat-launcher i{font-size:1.15rem}
+

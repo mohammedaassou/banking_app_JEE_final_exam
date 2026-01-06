@@ -412,5 +412,5 @@ Access the H2 console at: `http://localhost:8085/h2-console`
 
 ## 📄 License
 
-This is an academic project for educational purposes.
+This is an academic project for educational purposes by Mohamed Aassou, Aymane El yamani, Fatima Zahra Ait Lamine, Aya Anam, and Meryem Fellah.
 

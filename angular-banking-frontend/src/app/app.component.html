@@ -4,7 +4,7 @@
 </router-outlet>
 
 <!-- Floating Chat Launcher (bottom-left) -->
-<a class="chat-launcher" routerLink="/chat" aria-label="Open chatbot">
+<a class="chat-launcher" routerLink="/chat" aria-label="Open chatbot" *ngIf="isAuthenticated">
 	<i class="bi bi-chat-dots"></i>
 	<span class="label">Chat</span>
 	<span class="visually-hidden">Open chatbot</span>

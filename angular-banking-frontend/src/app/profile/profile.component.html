@@ -1,0 +1,140 @@
+<div class="profile-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <!-- Profile Info Card -->
+        <div class="card profile-card mb-4">
+          <div class="card-header">
+            <h4><i class="bi bi-person-circle me-2"></i>Profile Information</h4>
+          </div>
+          <div class="card-body" *ngIf="user">
+            <div class="profile-avatar">
+              <div class="avatar-circle">
+                {{ user.firstName?.charAt(0) || user.username.charAt(0) | uppercase }}
+              </div>
+            </div>
+            
+            <div class="profile-details">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="detail-label">Username</label>
+                  <p class="detail-value">{{ user.username }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="detail-label">Email</label>
+                  <p class="detail-value">{{ user.email }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="detail-label">First Name</label>
+                  <p class="detail-value">{{ user.firstName || 'Not set' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="detail-label">Last Name</label>
+                  <p class="detail-value">{{ user.lastName || 'Not set' }}</p>
+                </div>
+                <div class="col-md-12">
+                  <label class="detail-label">Roles</label>
+                  <p class="detail-value">
+                    <span *ngFor="let role of user.roles" class="badge bg-primary me-1">
+                      {{ role.replace('ROLE_', '') }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Change Password Card -->
+        <div class="card profile-card">
+          <div class="card-header">
+            <h4><i class="bi bi-shield-lock me-2"></i>Change Password</h4>
+          </div>
+          <div class="card-body">
+            <div *ngIf="error" class="alert alert-danger" role="alert">
+              <i class="bi bi-exclamation-circle me-2"></i>
+              {{ error }}
+            </div>
+
+            <div *ngIf="success" class="alert alert-success" role="alert">
+              <i class="bi bi-check-circle me-2"></i>
+              {{ success }}
+            </div>
+
+            <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+              <div class="form-group mb-3">
+                <label for="currentPassword" class="form-label">Current Password</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                  <input 
+                    [type]="showCurrentPassword ? 'text' : 'password'" 
+                    id="currentPassword"
+                    class="form-control" 
+                    formControlName="currentPassword" 
+                    placeholder="Enter current password"
+                    [ngClass]="{ 'is-invalid': f['currentPassword'].touched && f['currentPassword'].errors }">
+                  <button type="button" class="btn btn-outline-secondary" (click)="toggleCurrentPassword()">
+                    <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+                <div *ngIf="f['currentPassword'].touched && f['currentPassword'].errors" class="invalid-feedback d-block">
+                  <span *ngIf="f['currentPassword'].errors['required']">Current password is required</span>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                  <input 
+                    [type]="showNewPassword ? 'text' : 'password'" 
+                    id="newPassword"
+                    class="form-control" 
+                    formControlName="newPassword" 
+                    placeholder="Enter new password"
+                    [ngClass]="{ 'is-invalid': f['newPassword'].touched && f['newPassword'].errors }">
+                  <button type="button" class="btn btn-outline-secondary" (click)="toggleNewPassword()">
+                    <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+                <div *ngIf="f['newPassword'].touched && f['newPassword'].errors" class="invalid-feedback d-block">
+                  <span *ngIf="f['newPassword'].errors['required']">New password is required</span>
+                  <span *ngIf="f['newPassword'].errors['minlength']">Password must be at least 6 characters</span>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                  <input 
+                    [type]="showConfirmPassword ? 'text' : 'password'" 
+                    id="confirmPassword"
+                    class="form-control" 
+                    formControlName="confirmPassword" 
+                    placeholder="Confirm new password"
+                    [ngClass]="{ 'is-invalid': f['confirmPassword'].touched && (f['confirmPassword'].errors || passwordForm.errors?.['mismatch']) }">
+                  <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPassword()">
+                    <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+                <div *ngIf="f['confirmPassword'].touched" class="invalid-feedback d-block">
+                  <span *ngIf="f['confirmPassword'].errors?.['required']">Please confirm your password</span>
+                  <span *ngIf="passwordForm.errors?.['mismatch']">Passwords do not match</span>
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [disabled]="loading || passwordForm.invalid">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                {{ loading ? 'Updating...' : 'Update Password' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

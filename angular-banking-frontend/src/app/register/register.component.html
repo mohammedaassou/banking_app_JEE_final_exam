@@ -1,0 +1,137 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <i class="bi bi-bank2 auth-icon"></i>
+      <h2>Create Account</h2>
+      <p>Join us today</p>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-circle me-2"></i>
+      {{ error }}
+    </div>
+
+    <div *ngIf="success" class="alert alert-success" role="alert">
+      <i class="bi bi-check-circle me-2"></i>
+      {{ success }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input 
+              type="text" 
+              id="firstName"
+              class="form-control" 
+              formControlName="firstName" 
+              placeholder="First name">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input 
+              type="text" 
+              id="lastName"
+              class="form-control" 
+              formControlName="lastName" 
+              placeholder="Last name">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="username" class="form-label">Username *</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input 
+            type="text" 
+            id="username"
+            class="form-control" 
+            formControlName="username" 
+            placeholder="Choose a username"
+            [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors }">
+        </div>
+        <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback d-block">
+          <span *ngIf="f['username'].errors['required']">Username is required</span>
+          <span *ngIf="f['username'].errors['minlength']">Username must be at least 3 characters</span>
+          <span *ngIf="f['username'].errors['maxlength']">Username must not exceed 50 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">Email *</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          <input 
+            type="email" 
+            id="email"
+            class="form-control" 
+            formControlName="email" 
+            placeholder="Enter your email"
+            [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors }">
+        </div>
+        <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback d-block">
+          <span *ngIf="f['email'].errors['required']">Email is required</span>
+          <span *ngIf="f['email'].errors['email']">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="password" class="form-label">Password *</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password"
+            class="form-control" 
+            formControlName="password" 
+            placeholder="Create a password"
+            [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors }">
+          <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback d-block">
+          <span *ngIf="f['password'].errors['required']">Password is required</span>
+          <span *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password *</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input 
+            [type]="showConfirmPassword ? 'text' : 'password'" 
+            id="confirmPassword"
+            class="form-control" 
+            formControlName="confirmPassword" 
+            placeholder="Confirm your password"
+            [ngClass]="{ 'is-invalid': f['confirmPassword'].touched && (f['confirmPassword'].errors || registerForm.errors?.['mismatch']) }">
+          <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPassword()">
+            <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="f['confirmPassword'].touched" class="invalid-feedback d-block">
+          <span *ngIf="f['confirmPassword'].errors?.['required']">Please confirm your password</span>
+          <span *ngIf="registerForm.errors?.['mismatch']">Passwords do not match</span>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn btn-primary w-100 auth-btn"
+        [disabled]="loading || registerForm.invalid">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+        {{ loading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+    </div>
+  </div>
+</div>

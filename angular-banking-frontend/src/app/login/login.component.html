@@ -1,0 +1,67 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <i class="bi bi-bank2 auth-icon"></i>
+      <h2>Welcome Back</h2>
+      <p>Sign in to your account</p>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-circle me-2"></i>
+      {{ error }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group mb-3">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input 
+            type="text" 
+            id="username"
+            class="form-control" 
+            formControlName="username" 
+            placeholder="Enter your username"
+            [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors }">
+        </div>
+        <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback d-block">
+          <span *ngIf="f['username'].errors['required']">Username is required</span>
+          <span *ngIf="f['username'].errors['minlength']">Username must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password"
+            class="form-control" 
+            formControlName="password" 
+            placeholder="Enter your password"
+            [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors }">
+          <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback d-block">
+          <span *ngIf="f['password'].errors['required']">Password is required</span>
+          <span *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</span>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn btn-primary w-100 auth-btn"
+        [disabled]="loading || loginForm.invalid">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+    </div>
+  </div>
+</div>

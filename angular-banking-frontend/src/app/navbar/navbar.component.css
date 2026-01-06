@@ -10,3 +10,34 @@
 .navbar .btn-brand { color: #fff; background-color: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
 .navbar-toggler { border-color: rgba(255,255,255,0.15); }
 .navbar-toggler-icon { filter: invert(1) brightness(2); }
+
+/* User avatar styles */
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f3460;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #f8d7da;
+}
+
+.btn-outline-light.btn-sm {
+  padding: 5px 15px;
+  border-radius: 20px;
+}

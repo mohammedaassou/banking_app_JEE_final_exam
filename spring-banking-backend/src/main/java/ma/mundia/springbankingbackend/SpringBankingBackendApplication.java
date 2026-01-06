@@ -9,12 +9,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ma.mundia.springbankingbackend.dtos.BankAccountDTO;
 import ma.mundia.springbankingbackend.dtos.CurrentBankAccountDTO;
 import ma.mundia.springbankingbackend.dtos.CustomerDTO;
 import ma.mundia.springbankingbackend.dtos.SavingBankAccountDTO;
 import ma.mundia.springbankingbackend.entities.AccountOperation;
+import ma.mundia.springbankingbackend.entities.AppRole;
+import ma.mundia.springbankingbackend.entities.AppUser;
 import ma.mundia.springbankingbackend.entities.CurrentAccount;
 import ma.mundia.springbankingbackend.entities.Customer;
 import ma.mundia.springbankingbackend.entities.SavingAccount;
@@ -22,6 +25,8 @@ import ma.mundia.springbankingbackend.enums.AccountStatus;
 import ma.mundia.springbankingbackend.enums.OperationType;
 import ma.mundia.springbankingbackend.exceptions.CustomerNotFoundException;
 import ma.mundia.springbankingbackend.repositories.AccountOperationRepository;
+import ma.mundia.springbankingbackend.repositories.AppRoleRepository;
+import ma.mundia.springbankingbackend.repositories.AppUserRepository;
 import ma.mundia.springbankingbackend.repositories.BankAccountRepository;
 import ma.mundia.springbankingbackend.repositories.CustomerRepository;
 import ma.mundia.springbankingbackend.services.BankAccountService;
@@ -32,6 +37,48 @@ public class SpringBankingBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringBankingBackendApplication.class, args);
     }
+
+    @Bean
+    CommandLineRunner initUsers(AppRoleRepository appRoleRepository,
+                                AppUserRepository appUserRepository,
+                                PasswordEncoder passwordEncoder) {
+        return args -> {
+            // Create roles if they don't exist
+            AppRole adminRole = appRoleRepository.findByRoleName("ROLE_ADMIN")
+                    .orElseGet(() -> appRoleRepository.save(new AppRole(null, "ROLE_ADMIN")));
+            AppRole userRole = appRoleRepository.findByRoleName("ROLE_USER")
+                    .orElseGet(() -> appRoleRepository.save(new AppRole(null, "ROLE_USER")));
+
+            // Create admin user if doesn't exist
+            if (!appUserRepository.existsByUsername("admin")) {
+                AppUser admin = AppUser.builder()
+                        .username("admin")
+                        .email("admin@bank.com")
+                        .password(passwordEncoder.encode("admin123"))
+                        .firstName("Admin")
+                        .lastName("User")
+                        .enabled(true)
+                        .roles(List.of(adminRole, userRole))
+                        .build();
+                appUserRepository.save(admin);
+            }
+
+            // Create test user if doesn't exist
+            if (!appUserRepository.existsByUsername("user")) {
+                AppUser user = AppUser.builder()
+                        .username("user")
+                        .email("user@bank.com")
+                        .password(passwordEncoder.encode("user123"))
+                        .firstName("Test")
+                        .lastName("User")
+                        .enabled(true)
+                        .roles(List.of(userRole))
+                        .build();
+                appUserRepository.save(user);
+            }
+        };
+    }
+
     @Bean
     CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
         return args -> {

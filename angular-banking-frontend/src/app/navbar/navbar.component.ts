@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { User } from '../model/auth.model';
 
 @Component({
   selector: 'app-navbar',
@@ -7,10 +9,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  currentUser: User | null = null;
+  isAuthenticated = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
+    });
   }
 
   onSearch(event: Event, query: string) {
@@ -23,4 +33,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  logout(): void {
+    this.authService.logout();
+  }
 }

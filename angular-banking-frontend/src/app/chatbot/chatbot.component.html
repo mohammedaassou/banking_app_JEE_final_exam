@@ -1,0 +1,48 @@
+<div class="chat-layout">
+  <aside class="chat-sidebar">
+    <div class="sidebar-header">
+      <i class="bi bi-robot me-2"></i>
+      <span>Chatbot</span>
+    </div>
+    <button class="btn btn-brand w-100 mb-2" (click)="newThread()">
+      <i class="bi bi-plus-lg me-1"></i> New chat
+    </button>
+    <div class="thread-list">
+      <div *ngFor="let t of threads" class="thread-item" [class.active]="t.id===active?.id" (click)="selectThread(t)">
+        <div class="title" [title]="t.title">{{ t.title }}</div>
+        <button class="btn-icon" title="Delete" (click)="$event.stopPropagation(); deleteThread(t)"><i class="bi bi-trash"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="chat-main">
+    <div class="messages" #messagesContainer *ngIf="active; else emptyState">
+      <div *ngFor="let m of active.messages" class="message" [class.user]="m.role==='user'" [class.assistant]="m.role==='assistant'">
+        <div class="bubble">
+          <div class="role-icon"><i class="bi" [ngClass]="m.role==='user' ? 'bi-person' : 'bi-robot'"></i></div>
+          <div class="content">{{ m.content }}</div>
+        </div>
+      </div>
+      <div *ngIf="loading" class="message assistant">
+        <div class="bubble loading">
+          <div class="role-icon"><i class="bi bi-robot"></i></div>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <i class="bi bi-chat-dots mb-3"></i>
+        <h2>Start a conversation</h2>
+        <p>Ask anything about your banking app.</p>
+      </div>
+    </ng-template>
+
+    <form class="composer" (ngSubmit)="send()">
+      <input class="form-control" placeholder="Message the assistant..." [(ngModel)]="input" name="message" />
+      <button class="btn btn-brand" [disabled]="loading || !input.trim()">
+        <i class="bi bi-send"></i>
+      </button>
+    </form>
+  </main>
+</div>
